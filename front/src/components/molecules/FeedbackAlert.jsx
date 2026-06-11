@@ -1,13 +1,13 @@
 const styles = {
   success: {
-    color: '#155724',
-    backgroundColor: '#d4edda',
-    border: '1px solid #c3e6cb',
+    color: '#16a34a',
+    backgroundColor: '#f0fdf4',
+    border: '1px solid #16a34a',
   },
   error: {
-    color: '#721c24',
-    backgroundColor: '#f8d7da',
-    border: '1px solid #f5c6cb',
+    color: '#dc2626',
+    backgroundColor: '#fef2f2',
+    border: '1px solid #dc2626',
   },
 };
 
