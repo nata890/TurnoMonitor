@@ -11,14 +11,14 @@ if (typeof document !== 'undefined' && !document.getElementById('tm-spinner-styl
   document.head.appendChild(style);
 }
 
-export default function Spinner({ size = 17, color = '#fff', dark = false }) {
+export default function Spinner({ size = 17 }) {
   return (
     <span
       style={{
         width: size,
         height: size,
-        border: `2.5px solid ${dark ? 'rgba(0,0,0,0.12)' : 'rgba(255,255,255,0.3)'}`,
-        borderTopColor: color,
+        border: '2px solid rgba(255,255,255,0.3)',
+        borderTopColor: '#fff',
         borderRadius: '50%',
         animation: 'tm-spin 0.65s linear infinite',
         display: 'inline-block',

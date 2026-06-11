@@ -8,7 +8,9 @@ app.use(express.json());
 const monitores = [
   { id: "m-1", nombre: "Carlos Gomez", email: "carlos.gomez37803@ucaldas.edu.co" },
   { id: "m-2", nombre: "Sebastian Martinez", email: "juan.martinez37679@ucaldas.edu.co" },
-  { id: "m-3", nombre: "Natalia Ceballos", email: "natalia.ceballos28390@ucaldas.edu.co" }
+  { id: "m-3", nombre: "Natalia Ceballos", email: "natalia.ceballos28390@ucaldas.edu.co" },
+  { id: "m-4", nombre: "Sofia Espinosa", email: "sofia.espinosa31634@ucaldas.edu.co" },
+
 ];
 
 const salones = [
@@ -75,7 +77,7 @@ app.post('/turnos', async (req, res) => {
       })
     }).then(response => {
       console.log('Webhook disparado a n8n. Estado HTTP:', response.status);
-    }).catch((err) => { 
+    }).catch((err) => {
       console.error('Error enviando webhook a n8n:', err.message);
     });
   }
@@ -84,4 +86,6 @@ app.post('/turnos', async (req, res) => {
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => { });
+app.listen(PORT, () => {
+  console.log(`Servidor backend corriendo en http://localhost:${PORT}`);
+});
