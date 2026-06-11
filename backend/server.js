@@ -69,13 +69,22 @@ app.post('/turnos', async (req, res) => {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        ...nuevoTurno,
-        monitor: monitorAsignado,
-        salon: salonAsignado
+        turnoId: nuevoTurno.id,
+        horaInicio: `${fecha}T${hora_inicio}:00-05:00`,
+        sede: salonAsignado ? salonAsignado.sede : '',
+        sala: salonAsignado ? salonAsignado.nombre : '',
+        monitor: {
+          nombre: monitorAsignado ? monitorAsignado.nombre : '',
+          email: monitorAsignado ? monitorAsignado.email : '',
+          codigo: monitorAsignado ? monitorAsignado.id : ''
+        },
+        coordinador: {
+          nombre: "Coordinacion Turnos"
+        }
       })
     }).then(response => {
       console.log('Webhook disparado a n8n. Estado HTTP:', response.status);
-    }).catch((err) => { 
+    }).catch((err) => {
       console.error('Error enviando webhook a n8n:', err.message);
     });
   }
