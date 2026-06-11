@@ -51,7 +51,6 @@ export default function FormularioTurno() {
       .catch(() => setSalasFiltradas([]));
   }, [sede, hora]);
 
-  // 3. Envío adaptado al payload Express de tu compañero
   const manejarEnvio = async (e) => {
     e.preventDefault();
     if (!sede || !salaId || !monitorId || !fecha || !hora) {
@@ -59,10 +58,12 @@ export default function FormularioTurno() {
       return;
     }
 
+    const nombreMonitor = monitoresReal.find(m => m.id === monitorId)?.nombre || 'Monitor';
+    const nombreSala = salasFiltradas.find(s => s.id === salaId)?.nombre || 'Sala';
+
     setCargando(true);
     setAlerta({ type: '', message: '' });
 
-    // Cálculo automático de hora_fin (hora_inicio + 2 horas) exigido por el backend Express
     const [hH, mM] = hora.split(':').map(Number);
     const horaFinCalculada = `${String(hH + 2).padStart(2, '0')}:${String(mM).padStart(2, '0')}`;
 
@@ -71,12 +72,12 @@ export default function FormularioTurno() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          salon_id: salaId,         // Mapeado de salaId
-          monitor_id: monitorId,     // Mapeado de monitorId
-          materia: 'Asignación de monitor', // Requisito extra del backend provisional
+          salon_id: salaId,
+          monitor_id: monitorId,
+          materia: 'Asignación de monitor',
           fecha: fecha,
           hora_inicio: hora,
-          hora_fin: horaFinCalculada
+          hora_fin: horaFinCalculada,
         }),
       });
 
@@ -85,20 +86,20 @@ export default function FormularioTurno() {
       if (res.status === 201 || res.ok) {
         setAlerta({
           type: 'success',
-          message: `Turno asignado con éxito en el backend real.`
+          message: `✔ ¡Asignación Exitosa! Se ha registrado el turno para ${nombreMonitor} en la ${nombreSala} (${sede}). Notificación por correo electrónico enviada con la asignación correspondiente.`,
         });
-        // Limpiar formulario
         setSede('');
         setSalaId('');
         setMonitorId('');
         setFecha('');
         setHora('');
       } else if (res.status === 409) {
-        // Traducir la validación de conflicto de Express a los motivos del Arquitecto
-        const motivoAmigable = data?.detalle === 'salon_id'
-          ? 'Conflicto: La sala seleccionada ya tiene una clase o turno activo.'
-          : 'Conflicto: El monitor ya cuenta con un turno asignado en esta franja.';
-        setAlerta({ type: 'error', message: motivoAmigable });
+        setAlerta({
+          type: 'error',
+          message: data?.detalle === 'salon_id'
+            ? '❌ Conflicto: La sala seleccionada ya tiene una clase o un turno activo en ese bloque horario.'
+            : '❌ Conflicto: El monitor ya cuenta con un turno asignado en esta misma franja horaria.',
+        });
       } else if (res.status === 400) {
         setAlerta({ type: 'error', message: data?.error || 'Solicitud inválida (400).' });
       }
